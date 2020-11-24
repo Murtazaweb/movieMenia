@@ -30,7 +30,7 @@ class singleMovie extends Component {
 
     componentDidMount() {
         let movie_id = this.props.match.params.id;
-        console.log('movieID', movie_id);
+        //console.log('movieID', movie_id);
         apiCall.getMovieDetails(movie_id)
             .then(data => {
                 this.setState({
@@ -77,16 +77,16 @@ class singleMovie extends Component {
                         <pre>{this.state.movieOverview}</pre>
                         <h4>Genres</h4>
                         {this.state.movieGenres.map(mykey => (
-                            <button className="btn btn-primary"><span className="badge">{mykey.name}</span></button>
+                            <button className="btn btn-primary" key={mykey.id}><span className="badge" >{mykey.name}</span></button>
                         ))}
                         <p>{this.state.movieRuntime} </p>
                         <h4>Companies</h4>
                         {this.state.movieProduction.map(mykeyy => (
-                            <button className="btn btn-success"><span className="badge">{mykeyy.name}</span></button>
+                            <button className="btn btn-success" key={mykeyy.id}><span className="badge" >{mykeyy.name}</span></button>
                         ))}
                         <h4>SpokenLanguages</h4>
                         {this.state.movieSpokenLanguage.map(mykeyy1 => (
-                            <button className="btn btn-warning"><span className="badge">{mykeyy1.name}</span></button>
+                            <button className="btn btn-warning" key={mykeyy1.name}><span className="badge" >{mykeyy1.name}</span></button>
                         ))}
                         <button onClick={this.finalcheck}>Show Reviews</button>
                         {this.state.reviewComponent ? <Reviews singlemovieID={this.state.movieID} /> : <NoReviews />}
