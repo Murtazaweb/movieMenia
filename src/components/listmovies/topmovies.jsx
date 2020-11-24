@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import axios from "axios";
 import { Link } from 'react-router-dom';
 //import showMovies from '../showmovies/singlemovie'
-import './topmovies.css'
+import apicall from '../../Services/apicalls';
+import styles from './topmovies.module.css';
+//import './topmovies.css'
 
 class topMovies extends Component {
     constructor(props) {
@@ -20,23 +22,31 @@ class topMovies extends Component {
     }
 
     componentDidMount() {
-        axios.get('https://api.themoviedb.org/3/movie/popular?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&page=1')
-            .then(response => {
-                let allmoviesInfo = response.data.results;
-                console.log('all movies here', allmoviesInfo);
-                this.setState({ fullmovieList: allmoviesInfo });
-                this.filterData = response.data.results;
 
+        apicall.getPopularMovies()
+            .then(data => {
+                this.setState({
+                    fullmovieList: data.results
+                })
+                this.filterData = data.results;
             })
             .catch(function (error) {
 
             })
-        axios.get('https://api.themoviedb.org/3/genre/movie/list?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US')
-            .then(response => {
-                let genreInfo = response.data.genres;
-                console.log('all movies genre ids here', genreInfo);
-                this.genreArr = response.data.genres;
-
+        /* axios.get('https://api.themoviedb.org/3/movie/popular?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&page=1')
+             .then(response => {
+                 let allmoviesInfo = response.data.results;
+                 console.log('all movies here', allmoviesInfo);
+                 this.setState({ fullmovieList: allmoviesInfo });
+                 this.filterData = response.data.results;
+ 
+             })
+             .catch(function (error) {
+ 
+             })*/
+        apicall.getGenreList()
+            .then(data => {
+                this.genreArr = data.genres;
             })
             .catch(function (error) {
 
@@ -45,15 +55,15 @@ class topMovies extends Component {
     }
 
     filterByTitle = e => {
-        console.log(e.target.value);
-        console.log('inside filterRecords', this.filterData);
+        //console.log(e.target.value);
+        //console.log('inside filterRecords', this.filterData);
 
         let finalArray = this.filterData.filter((y) => {
-            console.log(y);
+            // console.log(y);
             let searchVal = y.title.toLowerCase();
             return searchVal.indexOf(e.target.value) !== -1;
         })
-        console.log('yes', finalArray);
+        //console.log('yes', finalArray);
         this.setState({ fullmovieList: finalArray });
     }
 
@@ -62,31 +72,23 @@ class topMovies extends Component {
 
         if (e.target.value === 'popularity.asc') {
             console.log('Popularty Ascending');
-            axios.get('https://api.themoviedb.org/3/discover/movie?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&sort_by=popularity.asc&include_adult=false&include_video=false&page=1')
-                .then(response => {
-                    let allmoviesInfo1 = response.data.results;
-                    console.log('//////////////////////////////');
-                    console.log('all movies here desc', allmoviesInfo1);
-                    this.setState({ fullmovieList: allmoviesInfo1 });
-                    // this.filterData = response.data.results;
-                    console.log('//////////////////////////////');
-
+            apicall.getpopAsc()
+                .then(data => {
+                    this.setState({
+                        fullmovieList: data.results
+                    })
                 })
                 .catch(function (error) {
 
                 })
-
-
         }
         else if (e.target.value === 'popularity.desc') {
             console.log('Popularty Desceding');
-            axios.get('https://api.themoviedb.org/3/discover/movie?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1')
-                .then(response => {
-                    let allmoviesInfo2 = response.data.results;
-                    console.log('all movies here', allmoviesInfo2);
-                    this.setState({ fullmovieList: allmoviesInfo2 });
-                    // this.filterData = response.data.results;
-
+            apicall.getpopDsc()
+                .then(data => {
+                    this.setState({
+                        fullmovieList: data.results
+                    })
                 })
                 .catch(function (error) {
 
@@ -96,13 +98,11 @@ class topMovies extends Component {
         }
         else if (e.target.value == 'revenue.asc') {
             console.log('RA');
-            axios.get('https://api.themoviedb.org/3/discover/movie?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&sort_by=revenue.asc&include_adult=false&include_video=false&page=1')
-                .then(response => {
-                    let allmoviesInfo3 = response.data.results;
-                    console.log('all movies here', allmoviesInfo3);
-                    this.setState({ fullmovieList: allmoviesInfo3 });
-                    // this.filterData = response.data.results;
-
+            apicall.getRevenueAsc()
+                .then(data => {
+                    this.setState({
+                        fullmovieList: data.results
+                    })
                 })
                 .catch(function (error) {
 
@@ -111,13 +111,11 @@ class topMovies extends Component {
         }
         else if (e.target.value == 'revenue.desc') {
             console.log('RD');
-            axios.get('https://api.themoviedb.org/3/discover/movie?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&sort_by=revenue.desc&include_adult=false&include_video=false&page=1')
-                .then(response => {
-                    let allmoviesInfo4 = response.data.results;
-                    console.log('all movies here', allmoviesInfo4);
-                    this.setState({ fullmovieList: allmoviesInfo4 });
-                    // this.filterData = response.data.results;
-
+            apicall.getRevenueDsc()
+                .then(data => {
+                    this.setState({
+                        fullmovieList: data.results
+                    })
                 })
                 .catch(function (error) {
 
@@ -126,13 +124,11 @@ class topMovies extends Component {
         }
         else if (e.target.value == 'original_title.asc') {
             console.log('OTA');
-            axios.get('https://api.themoviedb.org/3/discover/movie?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&sort_by=original_title.asc&include_adult=false&include_video=false&page=1')
-                .then(response => {
-                    let allmoviesInfo5 = response.data.results;
-                    console.log('all movies here', allmoviesInfo5);
-                    this.setState({ fullmovieList: allmoviesInfo5 });
-                    // this.filterData = response.data.results;
-
+            apicall.gettitleAsc()
+                .then(data => {
+                    this.setState({
+                        fullmovieList: data.results
+                    })
                 })
                 .catch(function (error) {
 
@@ -141,13 +137,11 @@ class topMovies extends Component {
         }
         else if (e.target.value == 'original_title.desc') {
             console.log('OTD');
-            axios.get('https://api.themoviedb.org/3/discover/movie?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&sort_by=original_title.desc&include_adult=false&include_video=false&page=1')
-                .then(response => {
-                    let allmoviesInfo6 = response.data.results;
-                    console.log('all movies here', allmoviesInfo6);
-                    this.setState({ fullmovieList: allmoviesInfo6 });
-                    // this.filterData = response.data.results;
-
+            apicall.gettitleDsc()
+                .then(data => {
+                    this.setState({
+                        fullmovieList: data.results
+                    })
                 })
                 .catch(function (error) {
 
@@ -156,13 +150,11 @@ class topMovies extends Component {
         }
         else if (e.target.value == 'vote_average.asc') {
             console.log('VT');
-            axios.get('https://api.themoviedb.org/3/discover/movie?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&sort_by=vote_average.asc&include_adult=false&include_video=false&page=1')
-                .then(response => {
-                    let allmoviesInfo7 = response.data.results;
-                    console.log('all movies here', allmoviesInfo7);
-                    this.setState({ fullmovieList: allmoviesInfo7 });
-                    // this.filterData = response.data.results;
-
+            apicall.getvoteAsc()
+                .then(data => {
+                    this.setState({
+                        fullmovieList: data.results
+                    })
                 })
                 .catch(function (error) {
 
@@ -171,13 +163,11 @@ class topMovies extends Component {
         }
         else if (e.target.value == 'vote_average.desc') {
             console.log('Popularty Desceding');
-            axios.get('https://api.themoviedb.org/3/discover/movie?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&sort_by=vote_average.desc&include_adult=false&include_video=false&page=1')
-                .then(response => {
-                    let allmoviesInfo8 = response.data.results;
-                    console.log('all movies here', allmoviesInfo8);
-                    this.setState({ fullmovieList: allmoviesInfo8 });
-                    // this.filterData = response.data.results;
-
+            apicall.getvoteDsc()
+                .then(data => {
+                    this.setState({
+                        fullmovieList: data.results
+                    })
                 })
                 .catch(function (error) {
 
@@ -211,15 +201,13 @@ class topMovies extends Component {
 
         let resultEl = getCheckedValues();
         console.log('yes', resultEl);
-        //console.log('yessss', resultEl.split(''));
-        axios.get(`https://api.themoviedb.org/3/discover/movie?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&with_genres=${resultEl}&include_adult=false&include_video=false&page=1`)
-            .then(response => {
-                let allmoviesInfo10 = response.data.results;
-                console.log('all movies here', allmoviesInfo10);
-                console.log('Total Results found', response.data.total_results);
-                this.setState({ fullmovieList: allmoviesInfo10 });
-                // this.filterData = response.data.results;
-
+        //console.log('Total Results found', response.data.total_results);
+        // this.filterData = response.data.results;
+        apicall.getGenreFilter(resultEl)
+            .then(data => {
+                this.setState({
+                    fullmovieList: data.results
+                })
             })
             .catch(function (error) {
 
@@ -230,7 +218,7 @@ class topMovies extends Component {
 
     showCheckboxes = () => {
         var expanded = false;
-        var checkboxes = document.getElementById("checkboxes");
+        var checkboxes = document.getElementById(styles.checkboxes);
         if (!expanded) {
             checkboxes.style.display = "block";
             expanded = true;
@@ -244,21 +232,21 @@ class topMovies extends Component {
     render() {
         return (
 
-            <div className="container">
+            <div className={styles.container}>
                 <h2>Search Filters</h2>
                 <hr></hr>
                 <h4>Search By Movie Genre</h4>
-                <div className="multiselect">
-                    <div className="selectBox" onClick={this.showCheckboxes}>
+                <div className={styles.multiselect}>
+                    <div className={styles.selectBox} onClick={this.showCheckboxes}>
                         <select>
                             <option>Select an option </option>
                         </select>
-                        <div className="overSelect"></div>
+                        <div className={styles.overSelect}></div>
                     </div>
-                    <div id="checkboxes">
+                    <div id={styles.checkboxes}>
 
                         {this.genreArr.map(myG => (
-                            <label for="one"> <input type="checkbox" name="type" value={myG.id} onChange={this.GenreFilter} />{myG.name}</label>
+                            <label for="one" key={myG.id}> <input type="checkbox" name="type" value={myG.id} onChange={this.GenreFilter} />{myG.name}</label>
                         ))}
                     </div>
                 </div>
@@ -267,12 +255,12 @@ class topMovies extends Component {
 
                 <hr></hr>
 
-                <div class="btn-group">
+                <div className="btn-group">
                     <h4>Search By Movie Title</h4>
                     <input type="search" onChange={this.filterByTitle} />
                     <hr></hr>
                     <h4>Search by others</h4>
-                    <div className="dropdown">
+                    <div className={styles.dropdown}>
                         <select onChange={this.mainFilter}>
                             <option value='All'>All </option>
                             <option value='popularity.asc'>Popularity Ascending </option>
@@ -290,16 +278,16 @@ class topMovies extends Component {
                 </hr>
                 <hr>
                 </hr>
-                <div className="row">
+                <div className={styles.row}>
                     {this.state.fullmovieList.map(mykey => (
 
-                        <div className="column">
-                            <div className="card" style={{ width: '200px' }}>
+                        <div className={styles.column} key={mykey.id}>
+                            <div className={styles.card} style={{ width: '200px' }}>
                                 <img className="card-img-top" src={this.imgadress + mykey.poster_path} style={{ width: '100%' }} />
                                 <div className="card-body">
                                     <h4 className="card-title">{mykey.title}</h4>
                                     <p className="card-text">{mykey.vote_average}</p>
-                                    <p className="card-text">{mykey.release_date}</p>
+                                    <p className="card - text">{mykey.release_date}</p>
                                     <Link className="btn btn-warning" to={"/onlymovie/" + mykey.id}>clickME</Link>
                                 </div>
 

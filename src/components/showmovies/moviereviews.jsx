@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import apiCalling from '../../Services/apicalls';
 import './noreviews';
 
 class movieReviews extends Component {
@@ -16,12 +16,9 @@ class movieReviews extends Component {
     componentDidMount() {
         let movieIDD = this.props.singlemovieID;
 
-        axios.get(`https://api.themoviedb.org/3/movie/${movieIDD}/reviews?api_key=4035721c92357ccbd41d6dd017e5820a&language=en-US&page=1`)
-            .then(response => {
-                let resultArr = response.data.results;
-                console.log('all reviews here', resultArr);
-                this.setState({ reviewResults: resultArr });
-
+        apiCalling.getReviewsList(movieIDD)
+            .then(data => {
+                this.setState({ reviewResults: data.results });
             })
             .catch(function (error) {
 
@@ -46,7 +43,7 @@ class movieReviews extends Component {
 
 
                         {this.state.reviewResults.map(d => (
-                            <tr>
+                            <tr key={d.id}>
                                 <td>{d.author}</td>
                                 <td id='content'>{d.content}</td>
                                 <td>Full Review</td>

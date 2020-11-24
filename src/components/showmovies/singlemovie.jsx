@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-
+import apiCall from '../../Services/apicalls';
 
 import Reviews from './moviereviews';
 import NoReviews from './noreviews';
@@ -30,21 +30,20 @@ class singleMovie extends Component {
 
     componentDidMount() {
         let movie_id = this.props.match.params.id;
-        //console.log(movie_id);
-        axios.get(`https://api.themoviedb.org/3/movie/${movie_id}?api_key=4035721c92357ccbd41d6dd017e5820a`)
-            .then(response => {
-                //let movieInfo = response.data;
+        console.log('movieID', movie_id);
+        apiCall.getMovieDetails(movie_id)
+            .then(data => {
                 this.setState({
-                    movieID: response.data.id,
-                    movieTitle: response.data.title,
-                    moviePoster: response.data.poster_path,
-                    movieOverview: response.data.overview,
-                    movieRuntime: response.data.runtime,
-                    movieReleaseDate: response.data.release_date,
-                    movieVote: response.data.vote_average,
-                    movieSpokenLanguage: response.data.spoken_languages,
-                    movieProduction: response.data.production_companies,
-                    movieGenres: response.data.genres
+                    movieID: data.id,
+                    movieTitle: data.title,
+                    moviePoster: data.poster_path,
+                    movieOverview: data.overview,
+                    movieRuntime: data.runtime,
+                    movieReleaseDate: data.release_date,
+                    movieVote: data.vote_average,
+                    movieSpokenLanguage: data.spoken_languages,
+                    movieProduction: data.production_companies,
+                    movieGenres: data.genres
                 })
 
 
